@@ -65,8 +65,23 @@ class BossArray(object):
             else:
                 runs = []
                 length = len(not_cached)
-                prev = not_cached[0]
-                #for i in range
+                start_of_run = not_cached[0]
+                prev = start_of_run
+                for i in xrange(1,length):
+                    val = not_cached[i]
+                    if val - prev == 1:
+                        if i != length-1:
+                            pass
+                        else:
+                            runs.append((start_of_run,1+val-start_of_run))
+                    else:
+                        runs.append((start_of_run,val-1-start_of_run))
+                        if i < length - 1:
+                            start_of_run = not_cached[i]
+                    prev = val
+                for index,count in runs:
+                    print run
+                        
             cached.append(downloaded)
             cached.sort()
             return tuple(x[1] for x in cached)
