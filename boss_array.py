@@ -97,7 +97,7 @@ class BossArray(object):
                             legal_runs.append((index+offset,tmp_count))
                 downloaded = []
                 for index,count in legal_runs:
-                    tuples = zip(xrange(index,index+count),self._download(index,count,sortd=False))
+                    tuples = zip(xrange(index,index+count),self._download(index,count,sort=False))
                     downloaded = downloaded + tuples
                 # We turned off sorting while downloading the runs, since
                 # we knew we'd be adding a lot of data at once and it would
