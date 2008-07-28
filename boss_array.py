@@ -79,17 +79,33 @@ class BossArray(object):
                         if i < length - 1:
                             start_of_run = not_cached[i]
                     prev = val
-                downloaded = []
+                # First we break apart runs into
+                # groups of 50, since that is the
+                # maximum allowable number of results
+                # per request.
+                legal_runs = []
                 for index,count in runs:
-                    tuples = zip(xrange(index,index+count),self._download(index,count))
+                    if count <= 50:
+                        legal_runs.append((index,count))
+                    else:
+                        num_runs = count / 50
+                        if count % 50 > 0:
+                            num_runs = num_runs + 1
+                        for i in xrange(0,num_runs):
+                            offset = i * 50
+                            tmp_count = min(count - offset,50)
+                            legal_runs.append((index+offset,tmp_count))
+                downloaded = []
+                for index,count in legal_runs:
+                    tuples = zip(xrange(index,index+count),self._download(index,count,sortd=False))
                     downloaded = downloaded + tuples
+                # We turned off sorting while downloading the runs, since
+                # we knew we'd be adding a lot of data at once and it would
+                # be easier to only sort all the additional data once.
+                self.retrieved.sort()
                         
             cached = cached + downloaded
             cached.sort()
-            print "ALL"
-            print cached
-            print "ALL END"
-
             return tuple(x[1] for x in cached)
 
     def __len__(self):
