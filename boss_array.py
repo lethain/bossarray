@@ -49,7 +49,7 @@ class BossArray(object):
 
     def __getitem__(self, i):
         if type(i) == int:
-            cached, not_cached = self._cached_portion(i,0)
+            cached, not_cached = self._cached_portion(i,1)
             if cached == []:
                 return self._download(i,1)[0]
             else:
@@ -79,11 +79,17 @@ class BossArray(object):
                         if i < length - 1:
                             start_of_run = not_cached[i]
                     prev = val
+                downloaded = []
                 for index,count in runs:
-                    print run
+                    tuples = zip(xrange(index,index+count),self._download(index,count))
+                    downloaded = downloaded + tuples
                         
-            cached.append(downloaded)
+            cached = cached + downloaded
             cached.sort()
+            print "ALL"
+            print cached
+            print "ALL END"
+
             return tuple(x[1] for x in cached)
 
     def __len__(self):
